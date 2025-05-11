@@ -1,40 +1,5 @@
 import SwiftUI
 
-class Reservation: Identifiable, Equatable, Hashable, ObservableObject {
-    let id: UUID
-    @Published var customerName: String
-    @Published var reservationTime: Date
-    @Published var numberOfGuests: Int
-    @Published var contactInfo: String
-    @Published var selectedSeat: (table: Int, seat: Int)?
-    
-    init(customerName: String, reservationTime: Date, numberOfGuests: Int, contactInfo: String, selectedSeat: (table: Int, seat: Int)? = nil) {
-        self.id = UUID()
-        self.customerName = customerName
-        self.reservationTime = reservationTime
-        self.numberOfGuests = numberOfGuests
-        self.contactInfo = contactInfo
-        self.selectedSeat = selectedSeat
-    }
-    
-    init(id: UUID, customerName: String, reservationTime: Date, numberOfGuests: Int, contactInfo: String, selectedSeat: (table: Int, seat: Int)? = nil) {
-        self.id = id
-        self.customerName = customerName
-        self.reservationTime = reservationTime
-        self.numberOfGuests = numberOfGuests
-        self.contactInfo = contactInfo
-        self.selectedSeat = selectedSeat
-    }
-    
-    static func == (lhs: Reservation, rhs: Reservation) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
-
 enum NavigationTarget: Hashable {
     case reservationList
     case customerActions
@@ -63,6 +28,7 @@ struct ContentView: View {
                     Text("Customer")
                         .modifier(MainMenuButtonModifier(backgroundColor: .green))
                 }
+
                 Spacer()
             }
             .padding()
@@ -73,7 +39,7 @@ struct ContentView: View {
                 case .customerActions:
                     CustomerActionView(navigationPath: $navigationPath)
                 case .addReservation:
-                    AddReservationView(navigationPath: $navigationPath, existingReservationId: nil)
+                    AddReservationView(navigationPath: $navigationPath)
                 case .myReservations(let customerName):
                     MyReservationsView(navigationPath: $navigationPath, customerNameFilter: customerName)
                 case .editReservation(let reservationId):
@@ -81,7 +47,6 @@ struct ContentView: View {
                 }
             }
         }
-        .environmentObject(reservationStore)
     }
 }
 

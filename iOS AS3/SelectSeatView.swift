@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct Seat: Identifiable {
+struct Seat: Identifiable, Equatable {
     let id = UUID()
     let seatNumber: Int
     var isSelected: Bool = false
@@ -17,12 +17,12 @@ struct SelectSeatView: View {
     @EnvironmentObject var reservationStore: ReservationStore
     @Environment(\.dismiss) private var dismiss
     @State private var tables: [Table] = []
-    @Binding var selectedSeat: (table: Int, seat: Int)?
+    @Binding var selectedSeats: [(table: Int, seat: Int)]
     let numberOfGuests: Int
-    
-    init(numberOfGuests: Int, selectedSeat: Binding<(table: Int, seat: Int)?>) {
+
+    init(numberOfGuests: Int, selectedSeats: Binding<[(table: Int, seat: Int)]>) {
         self.numberOfGuests = numberOfGuests
-        self._selectedSeat = selectedSeat
+        self._selectedSeats = selectedSeats
         
         var tempTables: [Table] = []
         for tableNum in 1...10 {
@@ -34,12 +34,12 @@ struct SelectSeatView: View {
         }
         _tables = State(initialValue: tempTables)
     }
-    
+
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-    
+
     private var selectedCount: Int {
         tables.reduce(0) { $0 + $1.seats.filter { $0.isSelected }.count }
     }
@@ -51,18 +51,18 @@ struct SelectSeatView: View {
     private var canConfirm: Bool {
         selectedCount == numberOfGuests
     }
-    
+
     var body: some View {
         VStack {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 30) {
                     ForEach(tables.indices, id: \.self) { index in
-                        TableView(table: $tables[index], reservationStore: reservationStore)
+                        TableView(table: $tables[index], reservationStore: reservationStore, selectedCount: selectedCount, maxSelection: numberOfGuests)
                     }
                 }
                 .padding()
             }
-            
+
             Button(action: confirmSelection) {
                 Text(remainingSeats > 0 ?
                      "Select \(remainingSeats) more seat(s)" :
@@ -82,28 +82,24 @@ struct SelectSeatView: View {
             checkOccupiedSeats()
         }
     }
-    
+
     private func checkOccupiedSeats() {
         for tableIndex in tables.indices {
             for seatIndex in tables[tableIndex].seats.indices {
                 let tableNum = tables[tableIndex].tableNumber
                 let seatNum = tables[tableIndex].seats[seatIndex].seatNumber
                 tables[tableIndex].seats[seatIndex].isOccupied = reservationStore.isSeatOccupied(table: tableNum, seat: seatNum)
-                
-                // 如果这是之前选择的座位，标记为已选
-                if let selected = selectedSeat, selected.table == tableNum && selected.seat == seatNum {
+
+                if selectedSeats.contains(where: { $0.table == tableNum && $0.seat == seatNum }) {
                     tables[tableIndex].seats[seatIndex].isSelected = true
                 }
             }
         }
     }
-    
+
     private func confirmSelection() {
-        for table in tables {
-            for seat in table.seats where seat.isSelected {
-                selectedSeat = (table.tableNumber, seat.seatNumber)
-                break
-            }
+        selectedSeats = tables.flatMap { table in
+            table.seats.filter { $0.isSelected }.map { (table.tableNumber, $0.seatNumber) }
         }
         dismiss()
     }
@@ -112,26 +108,24 @@ struct SelectSeatView: View {
 struct TableView: View {
     @Binding var table: Table
     @ObservedObject var reservationStore: ReservationStore
-    
+    let selectedCount: Int
+    let maxSelection: Int
+
     var body: some View {
         VStack(spacing: 10) {
             Text("Table \(table.tableNumber)")
                 .font(.headline)
-            
+
             LazyVGrid(columns: [GridItem(.fixed(40)), GridItem(.fixed(40))], spacing: 15) {
                 ForEach(table.seats.indices, id: \.self) { seatIndex in
                     let seat = table.seats[seatIndex]
                     SeatView(seat: seat)
                         .onTapGesture {
                             if !seat.isOccupied {
-                                // 切换选择状态
-                                table.seats[seatIndex].isSelected.toggle()
-                                
-                                // 确保同一时间只选择一个座位
-                                if table.seats[seatIndex].isSelected {
-                                    for otherIndex in table.seats.indices where otherIndex != seatIndex {
-                                        table.seats[otherIndex].isSelected = false
-                                    }
+                                if seat.isSelected {
+                                    table.seats[seatIndex].isSelected = false
+                                } else if selectedCount < maxSelection {
+                                    table.seats[seatIndex].isSelected = true
                                 }
                             }
                         }
@@ -146,7 +140,7 @@ struct TableView: View {
 
 struct SeatView: View {
     let seat: Seat
-    
+
     var body: some View {
         Circle()
             .fill(seat.isOccupied ? Color.red : (seat.isSelected ? Color.blue : Color.green))

@@ -12,17 +12,21 @@ struct ReservationListView: View {
             } else {
                 List {
                     ForEach(reservationStore.reservations) { reservation in
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text("Customer: \(reservation.customerName)")
                                 .font(.headline)
                             Text("Time: \(reservation.reservationTime.formatted(date: .abbreviated, time: .shortened))")
                             Text("Guests: \(reservation.numberOfGuests)")
                             Text("Contact: \(reservation.contactInfo)")
-                            if let seat = reservation.selectedSeat {
-                                Text("Table \(seat.table) - Seat \(seat.seat)")
+                            if let seats = reservation.selectedSeats, !seats.isEmpty {
+                                Text("Seats: \(seats.map { "T\($0.table)-S\($0.seat)" }.joined(separator: ", "))")
                                     .foregroundColor(.blue)
+                            } else {
+                                Text("Seats: None selected")
+                                    .foregroundColor(.gray)
                             }
                         }
+                        .padding(.vertical, 4)
                     }
                 }
             }
@@ -40,3 +44,4 @@ struct ReservationListView_Previews: PreviewProvider {
         }
     }
 }
+

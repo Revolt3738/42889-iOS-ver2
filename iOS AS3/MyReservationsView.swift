@@ -83,10 +83,14 @@ struct ReservationCard: View {
                     Text("Time: \(reservation.reservationTime.formatted())")
                     Text("Guests: \(reservation.numberOfGuests)")
                     Text("Contact: \(reservation.contactInfo)")
-                    if let seat = reservation.selectedSeat {
-                        Text("Table \(seat.table) - Seat \(seat.seat)")
+                    if let seats = reservation.selectedSeats, !seats.isEmpty {
+                        Text("Seats: \(seats.map { "T\($0.table)-S\($0.seat)" }.joined(separator: ", "))")
                             .foregroundColor(.blue)
+                    } else {
+                        Text("Seats: None selected")
+                            .foregroundColor(.gray)
                     }
+
                 }
                 .padding()
                 .frame(maxWidth: .infinity)

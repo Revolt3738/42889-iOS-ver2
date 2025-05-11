@@ -17,6 +17,7 @@
 		58B73F722DCDCC9500E748E2 /* CustomerActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B73F702DCDCC9500E748E2 /* CustomerActionView.swift */; };
 		58B73F732DCDCC9500E748E2 /* MyReservationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B73F712DCDCC9500E748E2 /* MyReservationsView.swift */; };
 		624E58A22DCE29330073C203 /* SelectSeatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624E58A12DCE29260073C203 /* SelectSeatView.swift */; };
+		8E13AE552DD0BC620013171B /* Reservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E13AE542DD0BC5B0013171B /* Reservation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		58B73F702DCDCC9500E748E2 /* CustomerActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomerActionView.swift; sourceTree = "<group>"; };
 		58B73F712DCDCC9500E748E2 /* MyReservationsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyReservationsView.swift; sourceTree = "<group>"; };
 		624E58A12DCE29260073C203 /* SelectSeatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSeatView.swift; sourceTree = "<group>"; };
+		8E13AE542DD0BC5B0013171B /* Reservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reservation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 			children = (
 				624E58A12DCE29260073C203 /* SelectSeatView.swift */,
 				58B73F702DCDCC9500E748E2 /* CustomerActionView.swift */,
+				8E13AE542DD0BC5B0013171B /* Reservation.swift */,
 				58B73F712DCDCC9500E748E2 /* MyReservationsView.swift */,
 				58B73F6A2DCDCA2900E748E2 /* AddReservationView.swift */,
 				58B73F6B2DCDCA2900E748E2 /* ReservationListView.swift */,
@@ -157,6 +160,7 @@
 			files = (
 				58B73F732DCDCC9500E748E2 /* MyReservationsView.swift in Sources */,
 				58B73F722DCDCC9500E748E2 /* CustomerActionView.swift in Sources */,
+				8E13AE552DD0BC620013171B /* Reservation.swift in Sources */,
 				58B73F6D2DCDCA2900E748E2 /* AddReservationView.swift in Sources */,
 				58B73F6E2DCDCA2900E748E2 /* ReservationListView.swift in Sources */,
 				58B73F6F2DCDCA2900E748E2 /* ReservationStore.swift in Sources */,
