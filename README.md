@@ -20,6 +20,7 @@ A native iOS application for restaurant reservation management, built with Swift
 - **Easy Booking**: Make new reservations with just a few taps
 - **Reservation Management**: View, modify or cancel your bookings
 - **User-Friendly Interface**: Intuitive design for seamless navigation
+- **Online Seat Selection**: Choose your preferred seat during booking
 
 ## Technical Details
 
