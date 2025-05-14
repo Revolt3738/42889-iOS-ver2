@@ -3,7 +3,6 @@ import SwiftUI
 struct CustomerActionView: View {
     @EnvironmentObject var reservationStore: ReservationStore
     @Binding var navigationPath: [NavigationTarget]
-    @State private var customerName: String = ""
 
     var body: some View {
         VStack(spacing: 30) {
@@ -11,20 +10,18 @@ struct CustomerActionView: View {
                 .font(.title)
                 .padding(.bottom, 20)
             
-            TextField("Your Name", text: $customerName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal)
-            
             Button {
-                navigationPath.append(.myReservations(customerName: customerName))
+                print("DEBUG: View My Reservations button tapped")
+                navigationPath.append(.myReservations(customerName: ""))
             } label: {
                 Text("View My Reservations")
                     .modifier(MainMenuButtonModifier(backgroundColor: .orange))
             }
-            .disabled(customerName.isEmpty)
-
+            
             Button {
+                print("DEBUG: Make New Reservation button tapped")
                 navigationPath.append(.addReservation)
+                print("DEBUG: After append, navigationPath: \(navigationPath), count: \(navigationPath.count)")
             } label: {
                 Text("Make New Reservation")
                     .modifier(MainMenuButtonModifier(backgroundColor: .green))
@@ -34,6 +31,12 @@ struct CustomerActionView: View {
         }
         .padding()
         .navigationTitle("Customer")
+        .onAppear {
+            print("DEBUG: CustomerActionView onAppear, navigationPath: \(navigationPath)")
+        }
+        .onDisappear {
+            print("DEBUG: CustomerActionView onDisappear")
+        }
     }
 }
 
